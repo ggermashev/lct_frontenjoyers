@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% if not request.user.is_authenticated %}
+<ul>
+{% for r_m in reg_menu %}
+    <li>{{r_m.title}}</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% block content %}
+{% endblock %}
+</body>
+</html>
