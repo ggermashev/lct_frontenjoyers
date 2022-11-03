@@ -4,7 +4,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
+from rest_framework import viewsets
 from lct4.forms import *
+from lct4.serializers import *
 
 
 class Base:
@@ -83,3 +85,22 @@ class GetProducts(ListView, Base):
         context['count'] = Products.objects.all().count()
         return context
 
+
+class ProductsViewSet(viewsets.ModelViewSet):
+    queryset = Products.objects.all()
+    serializer_class = ProductsSerializer
+
+
+class CodesViewSet(viewsets.ModelViewSet):
+    queryset = Codes.objects.all()
+    serializer_class = CodesSerializer
+
+
+class RegionsViewSet(viewsets.ModelViewSet):
+    queryset = Regions.objects.all()
+    serializer_class = RegionsSerializer
+
+
+class DistrictsViewSet(viewsets.ModelViewSet):
+    queryset = Districts.objects.all()
+    serializer_class = DistrictsSerializer

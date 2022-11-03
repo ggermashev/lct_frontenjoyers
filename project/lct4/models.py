@@ -39,3 +39,43 @@ class Products(models.Model):
     def __str__(self):
         return self.product
 
+
+class Codes(models.Model):
+    description = models.CharField(max_length=256)
+
+    def get_absolute_url(self):
+        return reverse('code', kwargs={'code': self.code})
+
+    class Meta:
+        verbose_name = 'Коды'
+        verbose_name_plural = 'Коды'
+
+    def __str__(self):
+        return self.description
+
+
+class Regions(models.Model):
+    name = models.CharField(max_length=128)
+
+    def get_absolute_url(self):
+        return reverse('region', kwargs={'id': self.id})
+
+    class Meta:
+        verbose_name = 'Регионы'
+        verbose_name_plural = 'Регионы'
+
+    def __str__(self):
+        return self.name
+
+class Districts(models.Model):
+    name = models.CharField(max_length=128)
+
+    def get_absolute_url(self):
+        return reverse('district', kwargs={'id': self.id})
+
+    class Meta:
+        verbose_name = 'Округи'
+        verbose_name_plural = 'Округи'
+
+    def __str__(self):
+        return self.name
