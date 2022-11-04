@@ -1,1 +1,37 @@
 {% extends 'lct4/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="dropdown col-md-4">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                Regions
+            </button>
+            <ul class="dropdown-menu" id="regions">
+            </ul>
+        </div>
+        <div class="dropdown col-md-4">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                Districts
+            </button>
+            <ul class="dropdown-menu" id="districts">
+            </ul>
+        </div>
+        <div class="dropdown col-md-4">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                Products
+            </button>
+            <ul class="dropdown-menu" id="codes">
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div id="products" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" class="scrollspy-example bg-light p-3 rounded-2" tabindex="0">
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{% static 'lct4/js/script.js' %}"></script>
+{% endblock %}

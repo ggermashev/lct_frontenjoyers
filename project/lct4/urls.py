@@ -4,16 +4,20 @@ from rest_framework import routers
 from lct4.views import *
 
 router = routers.SimpleRouter()
-router.register(r'products', ProductsViewSet)
-router.register(r'codes', CodesViewSet)
-router.register(r'regions', RegionsViewSet)
-router.register(r'districts', DistrictsViewSet)
+router.register('products/codes', ProductCodesViewSet)
+router.register('products/regions', ProductRegionsViewSet)
+router.register('products/districts', ProductDistrictsViewSet)
+router.register('codes', CodesViewSet)
+router.register('regions', RegionsViewSet)
+router.register('districts', DistrictsViewSet)
 
 urlpatterns = [
     path('registration/', Registration.as_view(), name='registration'),
     path('login/', LoginUser.as_view(), name='login'),
-    path('profile/<slug:slug>', Profile.as_view(), name='profile'),
+    path('profile/<int:id>', Profile.as_view(), name='profile'),
     path('', Main.as_view(), name='main'),
     path('products/', GetProducts.as_view(), name='products'),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('logout/', logout_user, name='logout'),
+
 ]

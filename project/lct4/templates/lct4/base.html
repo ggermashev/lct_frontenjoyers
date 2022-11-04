@@ -1,18 +1,38 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LCT4</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link type="text/css" href="{% static 'lct4/css/style.css' %}" rel="stylesheet" />
 </head>
 <body>
-{% if not request.user.is_authenticated %}
-<ul>
-{% for r_m in reg_menu %}
-    <li>{{r_m.title}}</li>
-{% endfor %}
-</ul>
-{% endif %}
+
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% if not request.user.is_authenticated %}
+                {% for r_m in reg_menu %}
+                    <li class="nav-item"><a class="nav-link" href="{% url r_m.url %}">{{r_m.title}}</a></li>
+                {% endfor %}
+                {% endif %}
+
+                {% if request.user.is_authenticated %}
+                {% for m_m in main_menu %}
+                    <li class="nav-item"><a class="nav-link" href="{% url m_m.url %}">{{m_m.title}}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'profile' user.id %}">Профиль</a></li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
 {% block content %}
 {% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 </body>
 </html>

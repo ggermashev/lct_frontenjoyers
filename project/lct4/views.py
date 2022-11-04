@@ -1,12 +1,18 @@
+from django.contrib.auth import logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
 from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+
 from lct4.forms import *
 from lct4.serializers import *
+from lct4.serializers import ProductsSerializer
 
 
 class Base:
@@ -14,11 +20,14 @@ class Base:
         {'title': 'sign up', 'url': 'registration'},
         {'title': 'log in', 'url': 'login'}
     ]
-    main_menu = []
+    main_menu = [
+        {'title': 'log out', 'url': 'logout'},
+    ]
 
     def get_context(self, **kwargs):
         context = kwargs
         context['reg_menu'] = self.reg_menu
+        context['main_menu'] = self.main_menu
         return context
 
 class Registration(CreateView):
@@ -50,15 +59,19 @@ class LoginUser(LoginView):
         return context
 
 
+def logout_user(request):
+    logout(request)
+    return redirect('main')
+
 class Profile(DetailView, Base):
     model = CustomUsers
     context_object_name = 'user'
     template_name = "lct4/profile.html"
 
     def get_object(self, queryset=None):
-        slug = self.kwargs.get(self.slug_url_kwarg, None)
-        print(CustomUsers.objects.get(slug=slug))
-        return CustomUsers.objects.get(slug=slug)
+        pk = self.kwargs.get('id')
+        print(pk)
+        return CustomUsers.objects.get(pk=pk)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -86,9 +99,56 @@ class GetProducts(ListView, Base):
         return context
 
 
-class ProductsViewSet(viewsets.ModelViewSet):
+class ProductRegionsViewSet(viewsets.ModelViewSet):
     queryset = Products.objects.all()
     serializer_class = ProductsSerializer
+    lookup_field = 'region'
+
+    def list(self):
+        queryset = Products.objects.get(pk=1)
+        serializer = ProductsSerializer(queryset)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        reg = kwargs.get('region')
+        queryset = Products.objects.filter(region=reg)
+        serializer = ProductsSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class ProductCodesViewSet(viewsets.ModelViewSet):
+    queryset = Products.objects.all()
+    serializer_class = ProductsSerializer
+    lookup_field = 'code'
+
+    def list(self):
+        queryset = Products.objects.get(pk=1)
+        serializer = ProductsSerializer(queryset)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        code = kwargs.get('code')
+        code = code.rjust(2, '0')
+        queryset = Products.objects.filter(product__startswith=code)
+        serializer = ProductsSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class ProductDistrictsViewSet(viewsets.ModelViewSet):
+    queryset = Products.objects.all()
+    serializer_class = ProductsSerializer
+    lookup_field = 'district'
+
+    def list(self):
+        queryset = Products.objects.get(pk=1)
+        serializer = ProductsSerializer(queryset)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        dist = kwargs.get('district')
+        queryset = Products.objects.filter(district=dist)
+        serializer = ProductsSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class CodesViewSet(viewsets.ModelViewSet):
@@ -104,3 +164,4 @@ class RegionsViewSet(viewsets.ModelViewSet):
 class DistrictsViewSet(viewsets.ModelViewSet):
     queryset = Districts.objects.all()
     serializer_class = DistrictsSerializer
+
