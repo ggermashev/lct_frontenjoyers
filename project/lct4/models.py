@@ -67,6 +67,7 @@ class Regions(models.Model):
     def __str__(self):
         return self.name
 
+
 class Districts(models.Model):
     name = models.CharField(max_length=128)
 
@@ -79,3 +80,19 @@ class Districts(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProductNames(models.Model):
+    code = models.IntegerField()
+    description = models.CharField(max_length=128)
+
+    def get_absolute_url(self):
+        return reverse('code', kwargs={'code': self.code})
+
+    class Meta:
+        verbose_name = 'Коды2'
+        verbose_name_plural = 'Коды2'
+
+    def __str__(self):
+        return self.description
+

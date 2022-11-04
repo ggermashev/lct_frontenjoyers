@@ -65,6 +65,25 @@ def insert_codes():
     connect.close()
 
 
+def getNames():
+    connect = psycopg2.connect(dbname='lct4', user='postgres', password='postgres', host='localhost')
+    cursor = connect.cursor()
+    driver = webdriver.Chrome(ChromeDriverManager().install())
+    driver.get('https://www.alta.ru/tnved/')
+    time.sleep(5)
+    driver.implicitly_wait(15)
+    pluses = driver.find_elements(By.XPATH, "//i[@class='jstree-icon jstree-ocl']")
+    driver.implicitly_wait(15)
+    for p in pluses:
+        time.sleep(0.3)
+        p.click()
+        time.sleep(0.3)
+    pluses1 = driver.find_elements(By.XPATH, "//i[@class='jstree-icon jstree-ocl']")
+    for p in pluses1:
+        if p in pluses:
+            print("p")
+
+
 def update_regions():
     conn = psycopg2.connect(dbname='lct4', user='postgres', password='postgres', host='localhost')
     cur = conn.cursor()
@@ -97,4 +116,4 @@ def update_districts():
     conn.close()
 
 
-update_districts()
+getNames()
