@@ -11,6 +11,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
+import json
 
 settings.configure()
 django.setup()
@@ -116,4 +117,19 @@ def update_districts():
     conn.close()
 
 
-getNames()
+def insertNames():
+    conn = psycopg2.connect(dbname='lct4', user='postgres', password='postgres', host='localhost')
+    cur = conn.cursor()
+    with open('alta.json', 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        for d in data:
+            desc = data[d][:128] + "..."
+            print(d, desc)
+            if d == '...':
+                continue
+            cur.execute(f"insert into lct4_productnames (code, description) values ('{d}', '{desc}')")
+    conn.commit()
+    cur.close()
+    conn.close()
+
+insertNames()

@@ -84,7 +84,7 @@ class Districts(models.Model):
 
 class ProductNames(models.Model):
     code = models.IntegerField()
-    description = models.CharField(max_length=128)
+    description = models.CharField(max_length=256)
 
     def get_absolute_url(self):
         return reverse('code', kwargs={'code': self.code})
@@ -95,4 +95,20 @@ class ProductNames(models.Model):
 
     def __str__(self):
         return self.description
+
+
+class Nishas(models.Model):
+    user_id = models.ForeignKey('CustomUsers', related_name='users', on_delete=models.CASCADE, null=True)
+    region_id = models.ForeignKey('Regions', related_name='regions', on_delete=models.CASCADE, null=True)
+    product_id = models.ForeignKey('Codes', related_name='products', on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        verbose_name = 'Нишы'
+        verbose_name_plural = 'Нишы'
+
+    def get_absolute_url(self):
+        return reverse('nishas', kwargs={'user': self.user})
+
+    def __str__(self):
+        return self.product_id
 

@@ -4,12 +4,13 @@ from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, ListView, DetailView
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-
 from lct4.forms import *
 from lct4.serializers import *
 from lct4.serializers import ProductsSerializer
@@ -63,6 +64,11 @@ def logout_user(request):
     logout(request)
     return redirect('main')
 
+
+def dashboard(request):
+    return render(request, 'lct4/dashboard.html')
+
+
 class Profile(DetailView, Base):
     model = CustomUsers
     context_object_name = 'user'
@@ -110,7 +116,7 @@ class ProductRegionsViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         reg = kwargs.get('region')
-        queryset = Products.objects.filter(region=reg)
+        queryset = Products.objects.filter(region=reg).filter(direction='ИМ')
         serializer = ProductsSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -128,7 +134,7 @@ class ProductCodesViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         code = kwargs.get('code')
         code = code.rjust(2, '0')
-        queryset = Products.objects.filter(product__startswith=code)
+        queryset = Products.objects.filter(product__startswith=code).filter(direction='ИМ')
         serializer = ProductsSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -145,7 +151,7 @@ class ProductDistrictsViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         dist = kwargs.get('district')
-        queryset = Products.objects.filter(district=dist)
+        queryset = Products.objects.filter(district=dist).filter(direction='ИМ')
         serializer = ProductsSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -163,4 +169,23 @@ class RegionsViewSet(viewsets.ModelViewSet):
 class DistrictsViewSet(viewsets.ModelViewSet):
     queryset = Districts.objects.all()
     serializer_class = DistrictsSerializer
+
+
+class NishasViewSet(viewsets.ModelViewSet):
+    permission_classes = (AllowAny,)
+    queryset = Nishas.objects.all()
+    serializer_class = NishasSerializer
+    lookup_field = 'user_id'
+
+    def retrieve(self, request, *args, **kwargs):
+        user_id = kwargs.get('user_id')
+        queryset = Nishas.objects.filter(user_id=user_id)
+        serializer = NishasSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class ProductNamesViewSet(viewsets.ModelViewSet):
+    queryset = ProductNames.objects.all()
+    serializer_class = ProductnamesSerializer
+    lookup_field = 'code'
 

@@ -1,6 +1,13 @@
 {
   "dependencies": {
+    "@amcharts/amcharts5": "^5.2.31",
+    "@amcharts/amcharts5-fonts": "^5.0.1",
+    "@amcharts/amcharts5-geodata": "^5.0.6",
     "bootstrap": "^5.2.2",
-    "fetch": "^1.1.0"
+    "chart": "^0.1.2",
+    "chart.js": "^3.9.1",
+    "cookies": "^0.8.0",
+    "fetch": "^1.1.0",
+    "jQuery": "^1.7.4"
   }
 }

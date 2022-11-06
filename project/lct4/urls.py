@@ -10,6 +10,8 @@ router.register('products/districts', ProductDistrictsViewSet)
 router.register('codes', CodesViewSet)
 router.register('regions', RegionsViewSet)
 router.register('districts', DistrictsViewSet)
+router.register('nishas', NishasViewSet)
+router.register('names', ProductNamesViewSet)
 
 urlpatterns = [
     path('registration/', Registration.as_view(), name='registration'),
@@ -19,5 +21,6 @@ urlpatterns = [
     path('products/', GetProducts.as_view(), name='products'),
     path('api/', include(router.urls)),
     path('logout/', logout_user, name='logout'),
-
+    path('dashboard/', dashboard, name='dashboard')
 ]
+
